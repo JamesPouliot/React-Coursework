@@ -1,0 +1,31 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    Note right of browser: Browser sees CSS document referenced in HTML, sends GET request for it.
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: CSS document (main.css)
+    deactivate server
+   
+    Note right of browser: Browser sees JS document referenced in HTML, sends GET request for it.
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    activate server
+    server-->>browser: JS file (spa.js)
+    deactivate server
+
+    Note right of browser: Browser executes code in spa.js that fetches JSON file 
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: the JSON file [{"content": "k", "date": "2025-01-09T13:24:44.690Z"}, ... ]
+    deactivate server
+
+    Note right of browser: Browser executes callback function in that renders notes from JSON file
