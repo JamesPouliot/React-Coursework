@@ -58,14 +58,16 @@ const Button = (props) => {
 const Statistics = (props) => {
 	if (props.all >= 1) {
 		return (
-			<>
-				<StatisticLine text='Good' amount={props.good} />
-				<StatisticLine text='Neutral' amount={props.neutral} />
-				<StatisticLine text='Bad' amount={props.bad} />
-				<StatisticLine text='All' amount={props.all} />
-				<StatisticLine text='average' amount={props.average} />
-				<StatisticLine text='positive' amount={props.positivePercentage + "%"} />
-			</>
+			<table>
+				<tbody>
+					<StatisticLine text='Good' amount={props.good} />
+					<StatisticLine text='Neutral' amount={props.neutral} />
+					<StatisticLine text='Bad' amount={props.bad} />
+					<StatisticLine text='All' amount={props.all} />
+					<StatisticLine text='average' amount={props.average} />
+					<StatisticLine text='positive' amount={props.positivePercentage + "%"} />
+				</tbody>
+			</table>
 		);
 	} else {
 		return <div>No Feedback Given</div>;
@@ -74,9 +76,10 @@ const Statistics = (props) => {
 
 const StatisticLine = (props) => {
 	return (
-		<div>
-			{props.text}: {props.amount}
-		</div>
+		<tr>
+			<th scope='row'>{props.text}</th>
+			<td>{props.amount}</td>
+		</tr>
 	);
 };
 
