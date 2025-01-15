@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-function randomize(max) {
+const randomize = (max) => {
 	return Math.floor(Math.random() * max);
-}
+};
 
 const App = () => {
 	const anecdotes = [
@@ -38,14 +38,26 @@ const App = () => {
 		console.log("new votes for this anecdote", updatedVotes[selected]);
 	};
 
+	const mostVotes = () => {
+		const voteMax = Math.max(...votes);
+		const topAnecdoteIndex = votes.indexOf(voteMax);
+		return topAnecdoteIndex;
+	};
+
 	return (
 		<>
+			<h2>Anecdote of the Day</h2>
 			<Anecdote
 				selectedAnecdote={anecdotes[selected]}
 				votesForAnecdote={votes[selected]}
 			/>
 			<Button function={() => handleVote(selected)} text='Vote' />
 			<Button function={handleClick} text='Next Anecdote' />
+			<h2>Anecdote with most votes</h2>
+			<Anecdote
+				selectedAnecdote={anecdotes[mostVotes()]}
+				votesForAnecdote={votes[mostVotes()]}
+			/>
 		</>
 	);
 };
