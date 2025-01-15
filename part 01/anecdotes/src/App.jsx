@@ -16,27 +16,51 @@ const App = () => {
 		"The only way to go fast, is to go well.",
 	];
 
+	const totalAnecdotes = anecdotes.length;
+	console.log("totalAnecdotes", totalAnecdotes);
+
+	const [votes, setVotes] = useState(new Array(totalAnecdotes).fill(0)); //create a zero-filled array with length totalAnecdotes
+	console.log("votes", votes); //[0,0,0,0,0,0,0,0]
+
 	const [selected, setSelected] = useState(0);
 
 	const handleClick = () => {
-		const totalAnecdotes = anecdotes.length;
 		const newAnecdoteIndex = randomize(totalAnecdotes);
 		setSelected(newAnecdoteIndex);
 		console.log("total", totalAnecdotes);
 		console.log("new anecdote index", newAnecdoteIndex);
 	};
 
+	const handleVote = (selected) => {
+		const updatedVotes = [...votes];
+		updatedVotes[selected] += 1;
+		setVotes(updatedVotes);
+		console.log("new votes for this anecdote", updatedVotes[selected]);
+	};
+
 	return (
 		<>
-			<Anecdote selectedAnecdote={anecdotes[selected]} />
-			<button onClick={handleClick}>Next Anecdote</button>
+			<Anecdote
+				selectedAnecdote={anecdotes[selected]}
+				votesForAnecdote={votes[selected]}
+			/>
+			<Button function={() => handleVote(selected)} text='Vote' />
+			<Button function={handleClick} text='Next Anecdote' />
 		</>
 	);
 };
 
+const Button = (props) => {
+	return <button onClick={props.function}>{props.text}</button>;
+};
+
 const Anecdote = (props) => {
-	console.log(props.selectedAnecdote);
-	return <div>{props.selectedAnecdote}</div>;
+	return (
+		<div>
+			<div>{props.selectedAnecdote}</div>
+			<div>Has {props.votesForAnecdote} votes</div>
+		</div>
+	);
 };
 
 export default App;
