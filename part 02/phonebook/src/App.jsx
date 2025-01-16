@@ -10,10 +10,20 @@ const Number = (props) => {
 
 const App = () => {
 	const [persons, setPersons] = useState([
-		{ name: "Arto Hellas", number: "040-1234567" },
+		{ name: "Arto Hellas", number: "040-123456", id: 1 },
+		{ name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+		{ name: "Dan Abramov", number: "12-43-234345", id: 3 },
+		{ name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
 	]);
+
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
+	const [filterWord, setFilterWord] = useState("");
+
+	const filteredPersons = persons.filter((person) =>
+		person.name.includes(filterWord)
+	);
+	console.log(filteredPersons);
 
 	const addPerson = (event) => {
 		event.preventDefault();
@@ -34,18 +44,23 @@ const App = () => {
 	};
 
 	const handleNewNameChange = (event) => {
-		console.log(event.target.value);
 		setNewName(event.target.value);
 	};
 
 	const handleNewNumberChange = (event) => {
-		console.log(event.target.value);
 		setNewNumber(event.target.value);
+	};
+
+	const handleFilterWordChange = (event) => {
+		setFilterWord(event.target.value);
 	};
 
 	return (
 		<div>
-			<h2>Phonebook</h2>
+			<h1>Phonebook</h1>
+			<h2>Filter</h2>
+			<input value={filterWord} onChange={handleFilterWordChange} />
+			<h2>Add New Number</h2>
 			<form onSubmit={addPerson}>
 				<div>
 					name: <input value={newName} onChange={handleNewNameChange} />
@@ -58,8 +73,8 @@ const App = () => {
 					<button type='submit'>add</button>
 				</div>
 			</form>
-			<h2>Numbers</h2>
-			{persons.map((person) => (
+			<h2>Numbers found in search</h2>
+			{filteredPersons.map((person) => (
 				<Number key={person.name} person={person} />
 			))}
 		</div>
