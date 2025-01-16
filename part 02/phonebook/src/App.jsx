@@ -1,10 +1,43 @@
 import { useState } from "react";
 
-const Number = (props) => {
+const Numbers = ({ filteredPersons }) => {
+	return (
+		<>
+			{" "}
+			{filteredPersons.map((person) => (
+				<Number key={person.name} person={person} />
+			))}
+		</>
+	);
+};
+
+const Number = ({ key, person }) => {
 	return (
 		<div>
-			{props.person.name} {props.person.number}
+			{person.name} {person.number}
 		</div>
+	);
+};
+
+const Filter = ({ filterWord, handler }) => {
+	return <input value={filterWord} onChange={handler} />;
+};
+
+const PersonForm = (props) => {
+	return (
+		<form onSubmit={props.addPerson}>
+			<div>
+				name: <input value={props.newName} onChange={props.handleNewNameChange} />
+			</div>
+			<div>
+				number:{" "}
+				<input value={props.newNumber} onChange={props.handleNewNumberChange} />
+			</div>
+
+			<div>
+				<button type='submit'>add</button>
+			</div>
+		</form>
 	);
 };
 
@@ -21,7 +54,7 @@ const App = () => {
 	const [filterWord, setFilterWord] = useState("");
 
 	const filteredPersons = persons.filter((person) =>
-		person.name.includes(filterWord)
+		person.name.toLowerCase().includes(filterWord.toLowerCase())
 	);
 	console.log(filteredPersons);
 
@@ -59,24 +92,17 @@ const App = () => {
 		<div>
 			<h1>Phonebook</h1>
 			<h2>Filter</h2>
-			<input value={filterWord} onChange={handleFilterWordChange} />
+			<Filter filterWord={filterWord} handler={handleFilterWordChange} />
 			<h2>Add New Number</h2>
-			<form onSubmit={addPerson}>
-				<div>
-					name: <input value={newName} onChange={handleNewNameChange} />
-				</div>
-				<div>
-					number: <input value={newNumber} onChange={handleNewNumberChange} />
-				</div>
-
-				<div>
-					<button type='submit'>add</button>
-				</div>
-			</form>
+			<PersonForm
+				addPerson={addPerson}
+				handleNewNameChange={handleNewNameChange}
+				handleNewNumberChange={handleNewNumberChange}
+				newName={newName}
+				newNumber={newNumber}
+			/>
 			<h2>Numbers found in search</h2>
-			{filteredPersons.map((person) => (
-				<Number key={person.name} person={person} />
-			))}
+			<Numbers filteredPersons={filteredPersons} />
 		</div>
 	);
 };
