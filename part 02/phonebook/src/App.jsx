@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 const Number = (props) => {
-	console.log("inside Number, person is:", props.person);
 	return <div>{props.person.name}</div>;
 };
 
@@ -12,14 +11,18 @@ const App = () => {
 	const addName = (event) => {
 		event.preventDefault();
 		console.log("adding name: ", newName);
-		const newNameObject = {
-			name: newName,
-		};
-		console.log("new name object: ", newNameObject);
-		const updatedPersons = persons.concat(newNameObject);
-		setPersons(updatedPersons);
-		console.log(updatedPersons);
-		// updatedPersons = persons.concat(person)
+		if (persons.some((person) => person.name === newName)) {
+			alert(`${newName} was already added to the phonebook.`);
+		} else {
+			const newNameObject = {
+				name: newName,
+			};
+			console.log("new name object: ", newNameObject);
+			const updatedPersons = persons.concat(newNameObject);
+			setPersons(updatedPersons);
+			console.log(updatedPersons);
+			// updatedPersons = persons.concat(person)
+		}
 	};
 
 	const handleNewNameChange = (event) => {
