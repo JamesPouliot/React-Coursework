@@ -24,7 +24,7 @@ const Course = ({ course }) => {
 		<>
 			<h2>{course.name}</h2>
 			{course.parts.map((part) => (
-				<Part part={part} />
+				<Part key={part.id} part={part} />
 			))}
 			<Total totalExercises={totalExercises} />
 		</>
