@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import personsService from './services/persons';
 
 const Numbers = ({ filteredPersons }) => {
 	return (
@@ -50,8 +51,7 @@ const App = () => {
 	const [filterWord, setFilterWord] = useState('');
 
 	useEffect(() => {
-		axios.get('http://localhost:3001/persons').then((response) => {
-			console.log('response data:', response.data);
+		personsService.getAll().then((response) => {
 			setPersons(response.data);
 		});
 	}, []);
@@ -71,18 +71,12 @@ const App = () => {
 				number: newNumber,
 			};
 			console.log('new name object: ', newNameObject);
-			// const updatedPersons = persons.concat(newNameObject);
 
-			axios
-				.post('http://localhost:3001/persons', newNameObject)
-				.then((response) => {
-					setPersons(persons.concat(response.data));
-					setNewName('');
-					setNewNumber('');
-				});
-
-			// setPersons(updatedPersons);
-			// console.log(updatedPersons);
+			personsService.create(newNameObject).then((response) => {
+				setPersons(persons.concat(response.data));
+				setNewName('');
+				setNewNumber('');
+			});
 		}
 	};
 
