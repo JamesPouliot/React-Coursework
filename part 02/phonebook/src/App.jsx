@@ -1,21 +1,29 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import personsService from './services/persons';
 
-const Numbers = ({ filteredPersons }) => {
+const Numbers = ({ filteredPersons, handleDeletion }) => {
 	return (
 		<>
 			{' '}
 			{filteredPersons.map((person) => (
-				<Number key={person.name} person={person} />
+				<Number
+					key={person.name}
+					person={person}
+					handleDeletion={handleDeletion}
+				/>
 			))}
 		</>
 	);
 };
 
-const Number = ({ person }) => {
+const Number = ({ person, handleDeletion }) => {
 	return (
 		<div>
 			{person.name} {person.number}
+			<button onClick={() => handleDeletion(person)} type="button">
+				Delete
+			</button>
 		</div>
 	);
 };
@@ -48,10 +56,10 @@ const App = () => {
 	const [newName, setNewName] = useState('');
 	const [newNumber, setNewNumber] = useState('');
 	const [filterWord, setFilterWord] = useState('');
+	const [personToDelete, setIDToDelete] = useState('');
 
 	useEffect(() => {
-		axios.get('http://localhost:3001/persons').then((response) => {
-			console.log('response data:', response.data);
+		personsService.getAll().then((response) => {
 			setPersons(response.data);
 		});
 	}, []);
@@ -71,18 +79,12 @@ const App = () => {
 				number: newNumber,
 			};
 			console.log('new name object: ', newNameObject);
-			// const updatedPersons = persons.concat(newNameObject);
 
-			axios
-				.post('http://localhost:3001/persons', newNameObject)
-				.then((response) => {
-					setPersons(persons.concat(response.data));
-					setNewName('');
-					setNewNumber('');
-				});
-
-			// setPersons(updatedPersons);
-			// console.log(updatedPersons);
+			personsService.create(newNameObject).then((response) => {
+				setPersons(persons.concat(response.data));
+				setNewName('');
+				setNewNumber('');
+			});
 		}
 	};
 
@@ -96,6 +98,18 @@ const App = () => {
 
 	const handleFilterWordChange = (event) => {
 		setFilterWord(event.target.value);
+	};
+
+	const handleDeletion = (deletedPerson) => {
+		const deletedPersonID = deletedPerson.id;
+		setIDToDelete(deletedPersonID);
+		console.log('attempting to delete ', deletedPerson.name);
+		if (
+			window.confirm(`Are you sure you want to delete ${deletedPerson.name}?`)
+		) {
+			personsService.removeEntry(deletedPersonID);
+			setPersons(persons.filter((person) => person.id !== deletedPersonID));
+		}
 	};
 
 	return (
@@ -112,7 +126,10 @@ const App = () => {
 				newNumber={newNumber}
 			/>
 			<h2>Numbers found in search</h2>
-			<Numbers filteredPersons={filteredPersons} />
+			<Numbers
+				filteredPersons={filteredPersons}
+				handleDeletion={handleDeletion}
+			/>
 		</div>
 	);
 };
