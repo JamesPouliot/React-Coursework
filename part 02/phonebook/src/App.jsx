@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Numbers = ({ filteredPersons }) => {
 	return (
 		<>
-			{" "}
+			{' '}
 			{filteredPersons.map((person) => (
 				<Number key={person.name} person={person} />
 			))}
@@ -28,44 +28,41 @@ const PersonForm = (props) => {
 	return (
 		<form onSubmit={props.addPerson}>
 			<div>
-				name: <input value={props.newName} onChange={props.handleNewNameChange} />
+				name:{' '}
+				<input value={props.newName} onChange={props.handleNewNameChange} />
 			</div>
 			<div>
-				number:{" "}
+				number:{' '}
 				<input value={props.newNumber} onChange={props.handleNewNumberChange} />
 			</div>
 
 			<div>
-				<button type='submit'>add</button>
+				<button type="submit">add</button>
 			</div>
 		</form>
 	);
 };
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  console.log("persons", persons);
-	const [newName, setNewName] = useState("");
-	const [newNumber, setNewNumber] = useState("");
-	const [filterWord, setFilterWord] = useState("");
+	const [persons, setPersons] = useState([]);
+	const [newName, setNewName] = useState('');
+	const [newNumber, setNewNumber] = useState('');
+	const [filterWord, setFilterWord] = useState('');
 
-useEffect(() => {
-  axios
-  .get('http://localhost:3001/persons')
-  .then(response => {
-    console.log("response data:", response.data);
-    setPersons(response.data)
-  })
-}, [])
+	useEffect(() => {
+		axios.get('http://localhost:3001/persons').then((response) => {
+			console.log('response data:', response.data);
+			setPersons(response.data);
+		});
+	}, []);
 
 	const filteredPersons = persons.filter((person) =>
 		person.name.toLowerCase().includes(filterWord.toLowerCase())
 	);
-	console.log(filteredPersons);
 
 	const addPerson = (event) => {
 		event.preventDefault();
-		console.log("adding name: ", newName);
+		console.log('adding name: ', newName);
 		if (persons.some((person) => person.name === newName)) {
 			alert(`${newName} was already added to the phonebook.`);
 		} else {
@@ -73,10 +70,19 @@ useEffect(() => {
 				name: newName,
 				number: newNumber,
 			};
-			console.log("new name object: ", newNameObject);
-			const updatedPersons = persons.concat(newNameObject);
-			setPersons(updatedPersons);
-			console.log(updatedPersons);
+			console.log('new name object: ', newNameObject);
+			// const updatedPersons = persons.concat(newNameObject);
+
+			axios
+				.post('http://localhost:3001/persons', newNameObject)
+				.then((response) => {
+					setPersons(persons.concat(response.data));
+					setNewName('');
+					setNewNumber('');
+				});
+
+			// setPersons(updatedPersons);
+			// console.log(updatedPersons);
 		}
 	};
 
