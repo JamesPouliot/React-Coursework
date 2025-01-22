@@ -6,7 +6,7 @@ const Numbers = ({ filteredPersons, handleDeletion }) => {
 	return (
 		<>
 			{' '}
-			{filteredPersons.map((person) => (
+			{filteredPersons.map(person => (
 				<Number
 					key={person.name}
 					person={person}
@@ -32,7 +32,7 @@ const Filter = ({ filterWord, handler }) => {
 	return <input value={filterWord} onChange={handler} />;
 };
 
-const PersonForm = (props) => {
+const PersonForm = props => {
 	return (
 		<form onSubmit={props.addPerson}>
 			<div>
@@ -59,20 +59,49 @@ const App = () => {
 	const [personToDelete, setIDToDelete] = useState('');
 
 	useEffect(() => {
-		personsService.getAll().then((response) => {
-			setPersons(response.data);
-		});
+		personsService
+			.getAll()
+			.then(response => {
+				setPersons(response.data);
+			})
+			.catch(error => {
+				console.log('error getting list');
+			});
 	}, []);
 
-	const filteredPersons = persons.filter((person) =>
+	const filteredPersons = persons.filter(person =>
 		person.name.toLowerCase().includes(filterWord.toLowerCase())
 	);
 
-	const addPerson = (event) => {
+	const addPerson = event => {
 		event.preventDefault();
 		console.log('adding name: ', newName);
-		if (persons.some((person) => person.name === newName)) {
-			alert(`${newName} was already added to the phonebook.`);
+		if (persons.some(person => person.name === newName)) {
+			if (
+				window.confirm(
+					`${newName} was already added to the phonebook. Would you like to change their number to ${newNumber}?`
+				)
+			) {
+				console.log('yes, replace');
+				const oldEntry = persons.find(person => person.name === newName);
+
+				console.log('old entry:', oldEntry);
+				const newEntry = { ...oldEntry, number: newNumber };
+				personsService
+					.update(newEntry)
+					.then(response => {
+						setPersons(
+							persons.map(entry =>
+								entry.id === newEntry.id ? newEntry : entry
+							)
+						);
+					})
+					.catch(error => {
+						console.log('error altering number');
+					});
+			} else {
+				console.log('no, do not replace');
+			}
 		} else {
 			const newNameObject = {
 				name: newName,
@@ -80,35 +109,45 @@ const App = () => {
 			};
 			console.log('new name object: ', newNameObject);
 
-			personsService.create(newNameObject).then((response) => {
-				setPersons(persons.concat(response.data));
-				setNewName('');
-				setNewNumber('');
-			});
+			personsService
+				.create(newNameObject)
+				.then(response => {
+					setPersons(persons.concat(response.data));
+					setNewName('');
+					setNewNumber('');
+				})
+				.catch(error => {
+					console.log('already created this entry');
+				});
 		}
 	};
 
-	const handleNewNameChange = (event) => {
+	const handleNewNameChange = event => {
 		setNewName(event.target.value);
 	};
 
-	const handleNewNumberChange = (event) => {
+	const handleNewNumberChange = event => {
 		setNewNumber(event.target.value);
 	};
 
-	const handleFilterWordChange = (event) => {
+	const handleFilterWordChange = event => {
 		setFilterWord(event.target.value);
 	};
 
-	const handleDeletion = (deletedPerson) => {
+	const handleDeletion = deletedPerson => {
 		const deletedPersonID = deletedPerson.id;
 		setIDToDelete(deletedPersonID);
 		console.log('attempting to delete ', deletedPerson.name);
 		if (
 			window.confirm(`Are you sure you want to delete ${deletedPerson.name}?`)
 		) {
-			personsService.removeEntry(deletedPersonID);
-			setPersons(persons.filter((person) => person.id !== deletedPersonID));
+			personsService
+				.removeEntry(deletedPersonID)
+				.then()
+				.catch(error => {
+					console.log('already deleted this entry');
+				});
+			setPersons(persons.filter(person => person.id !== deletedPersonID));
 		}
 	};
 
