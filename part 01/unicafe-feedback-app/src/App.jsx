@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const App = () => {
 	// save clicks of each button to its own state
@@ -11,32 +11,32 @@ const App = () => {
 	let positivePercentage = Math.round((good / all) * 100);
 
 	const handleGoodClick = () => {
-		console.log("Good Click -- Good before:", good);
+		console.log('Good Click -- Good before:', good);
 		const updatedGood = good + 1;
 		setGood(updatedGood);
-		console.log("Good after:", updatedGood);
+		console.log('Good after:', updatedGood);
 	};
 
 	const handleNeutralClick = () => {
-		console.log("Neutral Click -- Neutral before:", neutral);
+		console.log('Neutral Click -- Neutral before:', neutral);
 		const updatedNeutral = neutral + 1;
 		setNeutral(updatedNeutral);
-		console.log("Neutral after:", updatedNeutral);
+		console.log('Neutral after:', updatedNeutral);
 	};
 
 	const handleBadClick = () => {
-		console.log("Bad Click -- Bad before:", bad);
+		console.log('Bad Click -- Bad before:', bad);
 		const updatedBad = bad + 1;
 		setBad(updatedBad);
-		console.log("Bad after:", updatedBad);
+		console.log('Bad after:', updatedBad);
 	};
 
 	return (
 		<>
 			<h1>Give Feedback</h1>
-			<Button handleClick={handleGoodClick} text='good' />
-			<Button handleClick={handleNeutralClick} text='neutral' />
-			<Button handleClick={handleBadClick} text='bad' />
+			<Button handleClick={handleGoodClick} text="good" />
+			<Button handleClick={handleNeutralClick} text="neutral" />
+			<Button handleClick={handleBadClick} text="bad" />
 			<h2>Statistics</h2>
 
 			<Statistics
@@ -51,21 +51,24 @@ const App = () => {
 	);
 };
 
-const Button = (props) => {
+const Button = props => {
 	return <button onClick={props.handleClick}>{props.text}</button>;
 };
 
-const Statistics = (props) => {
+const Statistics = props => {
 	if (props.all >= 1) {
 		return (
 			<table>
 				<tbody>
-					<StatisticLine text='Good' amount={props.good} />
-					<StatisticLine text='Neutral' amount={props.neutral} />
-					<StatisticLine text='Bad' amount={props.bad} />
-					<StatisticLine text='All' amount={props.all} />
-					<StatisticLine text='average' amount={props.average} />
-					<StatisticLine text='positive' amount={props.positivePercentage + "%"} />
+					<StatisticLine text="Good" amount={props.good} />
+					<StatisticLine text="Neutral" amount={props.neutral} />
+					<StatisticLine text="Bad" amount={props.bad} />
+					<StatisticLine text="All" amount={props.all} />
+					<StatisticLine text="average" amount={props.average} />
+					<StatisticLine
+						text="positive"
+						amount={props.positivePercentage + '%'}
+					/>
 				</tbody>
 			</table>
 		);
@@ -74,10 +77,10 @@ const Statistics = (props) => {
 	}
 };
 
-const StatisticLine = (props) => {
+const StatisticLine = props => {
 	return (
 		<tr>
-			<th scope='row'>{props.text}</th>
+			<th scope="row">{props.text}</th>
 			<td>{props.amount}</td>
 		</tr>
 	);

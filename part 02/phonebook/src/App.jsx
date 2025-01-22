@@ -51,12 +51,31 @@ const PersonForm = props => {
 	);
 };
 
+const Notification = ({ alert }) => {
+	const redAlertStyle = {
+		color: alert[0],
+		background: 'lightgrey',
+		fontSize: 20,
+		borderStyle: 'solid',
+		borderRadius: 5,
+		padding: 10,
+		marginBottom: 10,
+	};
+
+	if (alert.length === 0) {
+		return null;
+	} else {
+		return <div style={redAlertStyle}>{alert[1]}</div>;
+	}
+};
+
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState('');
 	const [newNumber, setNewNumber] = useState('');
 	const [filterWord, setFilterWord] = useState('');
 	const [personToDelete, setIDToDelete] = useState('');
+	const [alert, setAlert] = useState([]);
 
 	useEffect(() => {
 		personsService
@@ -95,9 +114,23 @@ const App = () => {
 								entry.id === newEntry.id ? newEntry : entry
 							)
 						);
+						setAlert([
+							'orange',
+							`${newEntry.name}'s number changed to: ${newNumber}`,
+						]);
+						setTimeout(() => {
+							setAlert([]);
+						}, 5000);
 					})
 					.catch(error => {
 						console.log('error altering number');
+						setAlert([
+							'red',
+							`Error altering ${newName}. ${newName} was already deleted.`,
+						]);
+						setTimeout(() => {
+							setAlert([]);
+						}, 5000);
 					});
 			} else {
 				console.log('no, do not replace');
@@ -113,6 +146,10 @@ const App = () => {
 				.create(newNameObject)
 				.then(response => {
 					setPersons(persons.concat(response.data));
+					setAlert(['green', `${newName} created with number: ${newNumber}`]);
+					setTimeout(() => {
+						setAlert([]);
+					}, 5000);
 					setNewName('');
 					setNewNumber('');
 				})
@@ -143,7 +180,12 @@ const App = () => {
 		) {
 			personsService
 				.removeEntry(deletedPersonID)
-				.then()
+				.then(response => {
+					setAlert(['green', `${deletedPerson.name} deleted`]);
+					setTimeout(() => {
+						setAlert([]);
+					}, 5000);
+				})
 				.catch(error => {
 					console.log('already deleted this entry');
 				});
@@ -154,6 +196,7 @@ const App = () => {
 	return (
 		<div>
 			<h1>Phonebook</h1>
+			<Notification alert={alert} />
 			<h2>Filter</h2>
 			<Filter filterWord={filterWord} handler={handleFilterWordChange} />
 			<h2>Add New Number</h2>
