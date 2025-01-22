@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import countriesService from './services/countries'
 
 
 const Countries = ({displayedCountries}) => {
   console.log('drawing all countries');
   console.log(console.log(displayedCountries));
+
+  if (displayedCountries.length > 10) {
+    return <div>Too many countries! Narrow your search</div>
+  } else {
   return (
     <div>
     {displayedCountries.map(country => {
-            return <Country key={country.name.common} country={country} />
+      return <Country key={country.name.common} country={country} />
     })}
     </div>
-  )
+  )}
 }
 
 const Country = ({country}) => {
