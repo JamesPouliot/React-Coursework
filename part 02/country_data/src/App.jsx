@@ -1,57 +1,47 @@
 import { useState, useEffect } from 'react';
 import countriesService from './services/countries';
 
-const Countries = ({ displayedCountries }) => {
-	console.log('displaying these countries:');
-	console.log(displayedCountries);
+const Country = ({ country, expanded }) => {
+	const [revealed, setRevealed] = useState(expanded);
 
-	if (displayedCountries.length > 10) {
-		console.log('more than 10 countries');
-		return <div>Too many countries! Narrow your search</div>;
-	}
-	if (displayedCountries.length === 1) {
+	useEffect(() => {
+		const updatedRevealed = expanded;
+		console.log(`reveal useEffect triggered for ${country.name.common}`);
+		setRevealed(updatedRevealed);
+	}, [expanded]);
+
+	const handleReveal = countryName => {
+		console.log(`revealing: ${countryName}`);
+		setRevealed(true);
+	};
+
+	console.log(
+		`drawing country: ${country.name.common} as revealed:${revealed}`
+	);
+	if (!revealed) {
 		return (
 			<div>
-				{displayedCountries.map(country => {
-					return <SingleCountry key={country.name.common} country={country} />;
-				})}
+				{country.name.common}
+				<button onClick={() => handleReveal(country.name.common)}>Show</button>
 			</div>
 		);
 	} else {
 		return (
 			<div>
-				{displayedCountries.map(country => {
-					return <MultiCountry key={country.name.common} country={country} />;
-				})}
+				<h2>{country.name.common}</h2>
+				<p>Capital(s): {country.capital.join(', ')}</p>
+				<p>Area: {country.area}</p>
+				<p>Language(s): {Object.values(country.languages).join(', ')}</p>
+				<img src={country.flags.png} />
+				<Weather country={country} />
 			</div>
 		);
 	}
 };
 
-const MultiCountry = ({ country }) => {
-	console.log(`drawing country: ${country.name.common}`);
-	return <div>{country.name.common}</div>;
-};
-
-const SingleCountry = ({ country }) => {
-	console.log(`just one country -- drawing: ${country.name.common}`);
-	const plural = country.capital.length > 1 ? 's' : null;
-	return (
-		<div>
-			<h2>{country.name.common}</h2>
-			<p>
-				Capital{plural}: {country.capital.join(', ')}
-			</p>
-			<p>Area: {country.area}</p>
-			<p>Languages: {Object.values(country.languages).join(', ')}</p>
-			<img src={country.flags.png} />
-			<Weather country={country} />
-		</div>
-	);
-};
-
 const Weather = ({ country }) => {
 	const [weather, setWeather] = useState('');
+	const [weatherIconURL, setWeatherIconURL] = useState('');
 
 	useEffect(() => {
 		console.log('weather component WEATHER useEffect running');
@@ -65,15 +55,12 @@ const Weather = ({ country }) => {
 			});
 	}, []);
 
-	const [weatherIconURL, setWeatherIconURL] = useState('');
-
 	useEffect(() => {
-		if (weather.weather) {
-			console.log('weather component ICON useEffect running');
-			const updatedWeatherIconURL = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
-			console.log(`updateWeatherIconURL: ${updatedWeatherIconURL}`);
-			setWeatherIconURL(updatedWeatherIconURL);
-		}
+		weather.weather
+			? setWeatherIconURL(
+					`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`
+			  )
+			: null;
 	}, [weather]);
 
 	return (
@@ -126,7 +113,31 @@ const App = () => {
 			<label>
 				Search: <input onChange={handleSearchChange} value={searchWord} />
 			</label>
-			<Countries displayedCountries={displayedCountries} />
+			<div>
+				{displayedCountries.length > 10 ? (
+					<p>Too many countries! Narrow your search</p>
+				) : displayedCountries.length === 1 ? (
+					displayedCountries.map(country => {
+						return (
+							<Country
+								key={country.name.common}
+								country={country}
+								expanded={true}
+							/>
+						);
+					})
+				) : (
+					displayedCountries.map(country => {
+						return (
+							<Country
+								key={country.name.common}
+								country={country}
+								expanded={false}
+							/>
+						);
+					})
+				)}
+			</div>
 		</>
 	);
 };
