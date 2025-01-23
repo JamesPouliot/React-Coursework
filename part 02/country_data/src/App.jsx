@@ -21,13 +21,13 @@ const Countries = ({displayedCountries}) => {
   return (
     <div>
     {displayedCountries.map(country => {
-      return <Country key={country.name.common} country={country} />
+      return <MultiCountry key={country.name.common} country={country} />
     })}
     </div>
   )}
 }
 
-const Country = ({country}) => {
+const MultiCountry = ({country}) => {
   console.log(`drawing country: ${country.name.common}`);
   return (<div>{country.name.common}</div>)
 }
