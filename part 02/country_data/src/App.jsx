@@ -1,34 +1,20 @@
 import { useState, useEffect } from 'react';
 import countriesService from './services/countries';
 
-const Country = ({ country, expanded }) => {
-	const [revealed, setRevealed] = useState(expanded);
+const Country = ({ country, expanded, updateDisplayedCountries }) => {
+	const name = country.name.common;
 
-	useEffect(() => {
-		const updatedRevealed = expanded;
-		console.log(`reveal useEffect triggered for ${country.name.common}`);
-		setRevealed(updatedRevealed);
-	}, [expanded]);
-
-	const handleReveal = countryName => {
-		console.log(`revealing: ${countryName}`);
-		setRevealed(true);
-	};
-
-	console.log(
-		`drawing country: ${country.name.common} as revealed:${revealed}`
-	);
-	if (!revealed) {
+	if (!expanded) {
 		return (
 			<div>
-				{country.name.common}
-				<button onClick={() => handleReveal(country.name.common)}>Show</button>
+				{name}
+				<button onClick={() => updateDisplayedCountries(name)}>Show</button>
 			</div>
 		);
 	} else {
 		return (
 			<div>
-				<h2>{country.name.common}</h2>
+				<h2>{name}</h2>
 				<p>Capital(s): {country.capital.join(', ')}</p>
 				<p>Area: {country.area}</p>
 				<p>Language(s): {Object.values(country.languages).join(', ')}</p>
@@ -44,7 +30,6 @@ const Weather = ({ country }) => {
 	const [weatherIconURL, setWeatherIconURL] = useState('');
 
 	useEffect(() => {
-		console.log('weather component WEATHER useEffect running');
 		countriesService
 			.getWeather(country.latlng)
 			.then(response => {
@@ -94,17 +79,19 @@ const App = () => {
 				console.log('error getting list');
 			});
 	}, []);
-	console.log(countries);
 
 	const handleSearchChange = event => {
-		const updatedSearchWord = event.target.value.toLowerCase();
-		console.log('search word:', updatedSearchWord);
+		const updatedSearchWord = event.target.value;
 		setSearchWord(updatedSearchWord);
+		updateDisplayedCountries(updatedSearchWord);
+	};
 
-		const updatedDisplayedCountries = countries.filter(country => {
-			return country.name.common.toLowerCase().includes(updatedSearchWord);
+	const updateDisplayedCountries = partialName => {
+		const searchTerm = partialName.toLowerCase();
+		const updatedList = countries.filter(country => {
+			return country.name.common.toLowerCase().includes(searchTerm);
 		});
-		setDisplayedCountries(updatedDisplayedCountries);
+		setDisplayedCountries(updatedList);
 	};
 
 	return (
@@ -123,6 +110,7 @@ const App = () => {
 								key={country.name.common}
 								country={country}
 								expanded={true}
+								updateDisplayedCountries={updateDisplayedCountries}
 							/>
 						);
 					})
@@ -133,6 +121,7 @@ const App = () => {
 								key={country.name.common}
 								country={country}
 								expanded={false}
+								updateDisplayedCountries={updateDisplayedCountries}
 							/>
 						);
 					})
