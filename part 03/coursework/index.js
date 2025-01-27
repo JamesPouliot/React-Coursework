@@ -1,8 +1,6 @@
 const express = require('express');
 const app = express();
 
-app.use(express.json());
-
 let notes = [
 	{
 		id: '1',
@@ -20,6 +18,17 @@ let notes = [
 		important: true,
 	},
 ];
+
+const requestLogger = (request, reponse, next) => {
+	console.log('Method', request.method);
+	console.log('Path', request.path);
+	console.log('Bosy', request.body);
+	console.log('---');
+	next();
+};
+
+app.use(express.json());
+app.use(requestLogger);
 
 app.get('/', (request, response) => {
 	response.send('<h1>Hello World!</h1>');
@@ -46,7 +55,8 @@ app.get('/api/notes/:id', (request, response) => {
 });
 
 const generateId = () => {
-	notes.length > 0 ? Math.max(...notes.map(n => Number(n.id))) : 0;
+	const maxId =
+		notes.length > 0 ? Math.max(...notes.map(n => Number(n.id))) : 0;
 	return String(maxId + 1);
 };
 
@@ -74,3 +84,9 @@ app.delete('/api/notes/:id', (request, response) => {
 
 	response.status(204).end();
 });
+
+const unknownEndpoint = (request, response) => {
+	response.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);

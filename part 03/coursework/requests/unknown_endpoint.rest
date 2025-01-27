@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/notjhjhg
+Content-Type: application/json
+
+{
+  "content": "REST Client is good for testing backends",
+  "important": true
+}
