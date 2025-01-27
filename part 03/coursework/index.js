@@ -45,9 +45,26 @@ app.get('/api/notes/:id', (request, response) => {
 	}
 });
 
+const generateId = () => {
+	notes.length > 0 ? Math.max(...notes.map(n => Number(n.id))) : 0;
+	return String(maxId + 1);
+};
+
 app.post('/api/notes', (request, response) => {
-	const note = request.body;
-	console.log(note);
+	const body = request.body;
+	if (!body.content) {
+		return response.status(400).json({
+			error: 'content missing',
+		});
+	}
+
+	const note = {
+		content: body.content,
+		important: Boolean(body.important) || false,
+		id: generateId(),
+	};
+
+	notes = notes.concat(note);
 	response.json(note);
 });
 
