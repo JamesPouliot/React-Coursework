@@ -1,25 +1,29 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/persons';
+const baseUrl = 'http://localhost:3001/api/persons';
 
 const getAll = () => {
-	return axios.get(baseUrl);
+	const request = axios.get(baseUrl);
+	return request.then(response => response.data);
 };
 
-const create = (newObject) => {
-	return axios.post(baseUrl, newObject);
+const create = newObject => {
+	const request = axios.post(baseUrl, newObject);
+	return request.then(response => response.data);
 };
 
-const update = (newPersonObject) => {
-	return axios.put(`${baseUrl}/${newPersonObject.id}`, newPersonObject);
+const update = (id, newPersonObject) => {
+	console.log('attempting to update old entry to:', newPersonObject);
+	console.log(`id is ${newPersonObject.id}`);
+	return axios.put(`${baseUrl}/${id}`, newPersonObject);
 };
 
-const removeEntry = (id) => {
+const removeEntry = id => {
 	return axios.delete(`${baseUrl}/${id}`);
 };
 
 export default {
 	getAll,
 	create,
-	removeEntry,
 	update,
+	removeEntry,
 };

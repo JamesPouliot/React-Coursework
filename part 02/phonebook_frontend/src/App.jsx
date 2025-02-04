@@ -80,17 +80,13 @@ const App = () => {
 	useEffect(() => {
 		personsService
 			.getAll()
-			.then(response => {
-				setPersons(response.data);
+			.then(initialPersons => {
+				setPersons(initialPersons);
 			})
 			.catch(error => {
 				console.log('error getting list');
 			});
 	}, []);
-
-	const filteredPersons = persons.filter(person =>
-		person.name.toLowerCase().includes(filterWord.toLowerCase())
-	);
 
 	const addPerson = event => {
 		event.preventDefault();
@@ -106,9 +102,11 @@ const App = () => {
 
 				console.log('old entry:', oldEntry);
 				const newEntry = { ...oldEntry, number: newNumber };
+				console.log('new entry:', newEntry);
 				personsService
-					.update(newEntry)
+					.update(newEntry.id, newEntry)
 					.then(response => {
+						console.log('update response is:', response);
 						setPersons(
 							persons.map(entry =>
 								entry.id === newEntry.id ? newEntry : entry
@@ -144,8 +142,8 @@ const App = () => {
 
 			personsService
 				.create(newNameObject)
-				.then(response => {
-					setPersons(persons.concat(response.data));
+				.then(returnedPerson => {
+					setPersons(persons.concat(returnedPerson));
 					setAlert(['green', `${newName} created with number: ${newNumber}`]);
 					setTimeout(() => {
 						setAlert([]);
@@ -158,6 +156,10 @@ const App = () => {
 				});
 		}
 	};
+
+	const filteredPersons = persons.filter(person =>
+		person.name.toLowerCase().includes(filterWord.toLowerCase())
+	);
 
 	const handleNewNameChange = event => {
 		setNewName(event.target.value);
