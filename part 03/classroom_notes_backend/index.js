@@ -23,12 +23,13 @@ let notes = [
 const requestLogger = (request, reponse, next) => {
 	console.log('Method', request.method);
 	console.log('Path', request.path);
-	console.log('Bosy', request.body);
+	console.log('Body', request.body);
 	console.log('---');
 	next();
 };
 
 app.use(express.json());
+app.use(express.static('dist'));
 app.use(requestLogger);
 app.use(cors());
 
