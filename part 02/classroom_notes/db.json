@@ -1,84 +1,69 @@
 {
-  "notes": [
-    {
-      "id": "1",
-      "content": "HTML is easy",
-      "important": true
-    },
-    {
-      "id": "2",
-      "content": "Browser can execute only JavaScript",
-      "important": false
-    },
-    {
-      "id": "3",
-      "content": "GET and POST are the most important methods of HTTP protocol",
-      "important": true
-    },
-    {
-      "id": "b70c",
-      "content": "newandimproved",
-      "important": true
-    },
-    {
-      "id": "2b28",
-      "content": "adgadgah",
-      "important": true
-    },
-    {
-      "id": "72da",
-      "content": "daahhah",
-      "important": false
-    },
-    {
-      "id": "3a07",
-      "content": "ahfahh",
-      "important": false
-    },
-    {
-      "id": "73a9",
-      "content": "ahhaha",
-      "important": true
-    },
-    {
-      "id": "8198",
-      "content": "ahahah",
-      "important": true
-    },
-    {
-      "id": "82c4",
-      "content": "dfasdfa",
-      "important": true
-    },
-    {
-      "id": "68a1",
-      "content": "fafdhadfh",
-      "important": true
-    },
-    {
-      "id": "8443",
-      "content": "dgadg",
-      "important": true
-    },
-    {
-      "id": "c0af",
-      "content": "ahhad",
-      "important": false
-    },
-    {
-      "id": "4919",
-      "content": "dagad",
-      "important": true
-    },
-    {
-      "id": "be90",
-      "content": "afjaja",
-      "important": true
-    },
-    {
-      "id": "9f11",
-      "content": "dafsd",
-      "important": false
-    }
-  ]
+	"notes": [
+		{
+			"id": "1",
+			"content": "HTML is easy",
+			"important": true
+		},
+		{
+			"id": "2",
+			"content": "Browser can execute only JavaScript",
+			"important": false
+		},
+		{
+			"id": "3",
+			"content": "GET and POST are the most important methods of HTTP protocol",
+			"important": true
+		},
+		{
+			"id": "b70c",
+			"content": "newandimproved",
+			"important": true
+		},
+		{
+			"id": "2b28",
+			"content": "adgadgah",
+			"important": true
+		},
+		{
+			"id": "72da",
+			"content": "daahhah",
+			"important": true
+		},
+		{
+			"id": "3a07",
+			"content": "ahfahh",
+			"important": true
+		},
+		{
+			"id": "73a9",
+			"content": "ahhaha",
+			"important": false
+		},
+		{
+			"id": "8198",
+			"content": "ahahah",
+			"important": false
+		},
+		{
+			"id": "82c4",
+			"content": "dfasdfa",
+			"important": false
+		},
+		{
+			"id": "68a1",
+			"content": "fafdhadfh",
+			"important": true
+		},
+		{
+			"id": "8443",
+			"content": "dgadg",
+			"important": true
+		},
+		{
+			"id": "c0af",
+			"content": "ahhad",
+			"important": false
+		}
+	]
 }
