@@ -155,6 +155,7 @@ const App = () => {
 					console.log('already created this entry');
 				});
 		}
+		console.log('new Persons is:', persons);
 	};
 
 	const filteredPersons = persons.filter(person =>
@@ -192,6 +193,7 @@ const App = () => {
 					console.log('already deleted this entry');
 				});
 			setPersons(persons.filter(person => person.id !== deletedPersonID));
+			console.log('new Persons is:');
 		}
 	};
 
