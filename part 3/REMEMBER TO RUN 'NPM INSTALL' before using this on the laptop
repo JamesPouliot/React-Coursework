@@ -1,2 +1,0 @@
-cd %~dp0
-npm dev //because remember, we made "dev" the command to start index.js and --watch it. YOU STILL NEED TO REFRESH THE BROWSER every time, though, and there's not a fix for that according to the course.
