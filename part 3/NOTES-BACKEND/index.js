@@ -12,6 +12,9 @@ const requestLogger = (request, response, next) => {
 };
 app.use(requestLogger);
 
+const cors = require('cors');
+app.use(cors());
+
 let notes = [
 	{ id: '1', content: 'HTML is easy', important: true },
 	{ id: '2', content: 'Browser can execute only JavaScript', important: false },
